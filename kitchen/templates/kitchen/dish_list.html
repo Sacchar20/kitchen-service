@@ -1,0 +1,19 @@
+{% extends "kitchen/base.html" %}
+
+{% block content %}
+    <h1>Dishes Menu</h1>
+
+    {% if dish_list %}
+        <ul>
+            {% for dish_list_item in dish_list %}
+                <li>
+                    <strong>{{ dish_list_item.name }}</strong> 
+                    ({{ dish_list_item.dish_type.name }}) — 
+                    ${{ dish_list_item.price }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Our menu is currently empty.</p>
+    {% endif %}
+{% endblock %}
