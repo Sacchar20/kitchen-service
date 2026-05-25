@@ -1,16 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Kitchen Service</title>
-</head>
-<body>
+{% extends "kitchen/base.html" %}
+
+{% block content %}
     <h1>Kitchen Service Home</h1>
     <p>Welcome to our restaurant management system!</p>
+
     <ul>
-        <li><strong>Cooks:</strong> {{ num_cooks }}</li>
-        <li><strong>Dishes:</strong> {{ num_dishes }}</li>
-        <li><strong>Dish Types:</strong> {{ num_dish_types }}</li>
+        <li>
+            <a href="{% url 'kitchen:cook-list' %}">
+                <strong>Cooks:</strong> {{ num_cooks }}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'kitchen:dish-list' %}">
+                <strong>Dishes:</strong> {{ num_dishes }}
+            </a>
+        </li>
+        <li>
+            <a href="{% url 'kitchen:dish-type-list' %}">
+                <strong>Dish Types:</strong> {{ num_dish_types }}
+            </a>
+        </li>
     </ul>
-</body>
-</html>
+{% endblock %}
