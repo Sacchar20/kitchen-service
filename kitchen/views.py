@@ -1,7 +1,14 @@
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
 from .models import Cook, Dish, DishType
-from .forms import DishSearchForm, CookSearchForm, DishTypeSearchForm
+from .forms import (
+    DishSearchForm,
+    CookSearchForm,
+    DishTypeSearchForm,
+    CookCreationForm,
+    CookExperienceUpdateForm,
+)
 
 
 def index(request):
@@ -99,3 +106,66 @@ class DishTypeDetailView(generic.DetailView):
 
     def get_queryset(self):
         return DishType.objects.prefetch_related("dishes")
+
+
+# DishType CRUD
+class DishTypeCreateView(generic.CreateView):
+    model = DishType
+    fields = "__all__"
+    template_name = "kitchen/dish_type_form.html"
+    success_url = reverse_lazy("kitchen:dish-type-list")
+
+
+class DishTypeUpdateView(generic.UpdateView):
+    model = DishType
+    fields = "__all__"
+    template_name = "kitchen/dish_type_form.html"
+    success_url = reverse_lazy("kitchen:dish-type-list")
+
+
+class DishTypeDeleteView(generic.DeleteView):
+    model = DishType
+    template_name = "kitchen/dish_type_confirm_delete.html"
+    success_url = reverse_lazy("kitchen:dish-type-list")
+
+
+# Dish CRUD
+class DishCreateView(generic.CreateView):
+    model = Dish
+    fields = "__all__"
+    template_name = "kitchen/dish_form.html"
+    success_url = reverse_lazy("kitchen:dish-list")
+
+
+class DishUpdateView(generic.UpdateView):
+    model = Dish
+    fields = "__all__"
+    template_name = "kitchen/dish_form.html"
+    success_url = reverse_lazy("kitchen:dish-list")
+
+
+class DishDeleteView(generic.DeleteView):
+    model = Dish
+    template_name = "kitchen/dish_confirm_delete.html"
+    success_url = reverse_lazy("kitchen:dish-list")
+
+
+# Cook CRUD
+class CookCreateView(generic.CreateView):
+    model = Cook
+    form_class = CookCreationForm
+    template_name = "kitchen/cook_form.html"
+    success_url = reverse_lazy("kitchen:cook-list")
+
+
+class CookUpdateView(generic.UpdateView):
+    model = Cook
+    form_class = CookExperienceUpdateForm
+    template_name = "kitchen/cook_form.html"
+    success_url = reverse_lazy("kitchen:cook-list")
+
+
+class CookDeleteView(generic.DeleteView):
+    model = Cook
+    template_name = "kitchen/cook_confirm_delete.html"
+    success_url = reverse_lazy("kitchen:cook-list")

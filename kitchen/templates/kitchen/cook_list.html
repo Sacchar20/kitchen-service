@@ -1,7 +1,10 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Our Cooks</h1>
+    <h1>
+        Our Cooks
+        <a href="{% url 'kitchen:cook-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Register New Cook]</a>
+    </h1>
 
     <form method="get" action="">
         {{ search_form }}
@@ -21,6 +24,11 @@
                     {% else %}
                         — Experience: not specified
                     {% endif %}
+
+                    <span style="margin-left: 15px; font-size: 14px;">
+                        <a href="{% url 'kitchen:cook-update' pk=cook.id %}">Edit</a> |
+                        <a href="{% url 'kitchen:cook-delete' pk=cook.id %}" style="color: red;">Delete</a>
+                    </span>
                 </li>
             {% endfor %}
         </ul>

@@ -1,0 +1,14 @@
+{% extends "kitchen/base.html" %}
+
+{% block content %}
+    <h1>Delete Cook Account</h1>
+    
+    <p>Are you sure you want to delete the cook account: <strong>{{ cook.username }}</strong>?</p>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <input type="submit" value="Yes, delete">
+    </form>
+    
+    <p><a href="{% url 'kitchen:cook-list' %}">Cancel</a></p>
+{% endblock %}

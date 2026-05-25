@@ -1,7 +1,10 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Dishes Menu</h1>
+    <h1>
+        Dishes Menu
+        <a href="{% url 'kitchen:dish-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
+    </h1>
 
     <form method="get" action="">
         {{ search_form }}
@@ -18,6 +21,11 @@
                     </a>
                     ({{ dish_list_item.dish_type.name }}) —
                     ${{ dish_list_item.price }}
+
+                    <span style="margin-left: 15px; font-size: 14px;">
+                        <a href="{% url 'kitchen:dish-update' pk=dish_list_item.id %}">Edit</a> |
+                        <a href="{% url 'kitchen:dish-delete' pk=dish_list_item.id %}" style="color: red;">Delete</a>
+                    </span>
                 </li>
             {% endfor %}
         </ul>

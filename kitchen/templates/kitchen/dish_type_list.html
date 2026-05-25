@@ -1,7 +1,10 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Dish Types</h1>
+    <h1>
+        Dish Types
+        <a href="{% url 'kitchen:dish-type-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
+    </h1>
 
     <form method="get" action="">
         {{ search_form }}
@@ -16,6 +19,10 @@
                     <a href="{% url 'kitchen:dish-type-detail' pk=dish_type.id %}">
                         {{ dish_type.name }}
                     </a>
+                    <span style="margin-left: 15px; font-size: 14px;">
+                        <a href="{% url 'kitchen:dish-type-update' pk=dish_type.id %}">Edit</a> |
+                        <a href="{% url 'kitchen:dish-type-delete' pk=dish_type.id %}" style="color: red;">Delete</a>
+                    </span>
                 </li>
             {% endfor %}
         </ul>
