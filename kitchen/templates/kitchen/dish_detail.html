@@ -6,16 +6,61 @@
     <p><strong>Price:</strong> ${{ dish.price }}</p>
     <p><strong>Description:</strong> {{ dish.description }}</p>
 
+    <p><strong>Ingredients:</strong></p>
+    <ul>
+        {% for ingredient in dish.ingredients.all %}
+            <li>{{ ingredient.name }}</li>
+        {% empty %}
+            <li>No ingredients listed.</li>
+        {% endfor %}
+    </ul>
+
+    {% if user.is_authenticated %}
+        <div class="mb-3">
+            <form action="{% url 'kitchen:toggle-assign' pk=dish.id %}" method="post">
+                {% csrf_token %}
+                {% if user in dish.cooks.all %}
+                    <button type="submit" class="btn btn-danger">Delete me from this dish</button>
+                {% else %}
+                    <button type="submit" class="btn btn-success">Assign me to this dish</button>
+                {% endif %}
+            </form>
+        </div>
+    {% endif %}
+
     <h3>Cooks who prepare this dish:</h3>
     {% if dish.cooks.all %}
         <ul>
             {% for cook in dish.cooks.all %}
-                <li>{{ cook.username }}</li>
+                <li>{{ cook.username }} (Experience: {{ cook.years_of_experience }} years)</li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No cooks assigned to this dish yet.</p>
     {% endif %}
 
-    <p><a href="{% url 'kitchen:dish-list' %}">Back to list</a></p>
+    {% if assign_form and assign_form.fields.cook.queryset.exists %}
+        <div class="card mt-4 mb-4">
+            <div class="card-body">
+                <h5 class="card-title">Assign a less experienced cook to this dish</h5>
+                <form method="post" class="row g-3 align-items-center">
+                    {% csrf_token %}
+                    <div class="col-auto">
+                        {{ assign_form.cook }}
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-primary">Assign Cook</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="mt-3">
+        {% if user.is_authenticated and user.can_manage_dishes %}
+            <a href="{% url 'kitchen:dish-update' pk=dish.id %}" class="btn btn-secondary">Update Dish</a>
+            <a href="{% url 'kitchen:dish-delete' pk=dish.id %}" class="btn btn-danger">Delete Dish</a>
+        {% endif %}
+        <a href="{% url 'kitchen:dish-list' %}" class="btn btn-link">Back to list</a>
+    </div>
 {% endblock %}
