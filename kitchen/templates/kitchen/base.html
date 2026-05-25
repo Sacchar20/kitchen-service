@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Kitchen Service{% endblock %}</title>
+</head>
+<body>
+
+    <nav>
+        <a href="{% url 'kitchen:index' %}">Home</a> |
+        <a href="{% url 'kitchen:dish-type-list' %}">Dish Types</a>
+    </nav>
+    <hr>
+
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+</body>
+</html>
