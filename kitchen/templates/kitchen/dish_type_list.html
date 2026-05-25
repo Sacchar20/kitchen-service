@@ -3,7 +3,7 @@
 {% block content %}
     <h1>
         Dish Types
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and user.can_manage_types %}
             <a href="{% url 'kitchen:dish-type-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
         {% endif %}
     </h1>
@@ -21,7 +21,7 @@
                     <a href="{% url 'kitchen:dish-type-detail' pk=dish_type.id %}">
                         {{ dish_type.name }}
                     </a>
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.can_manage_types %}
                         <span style="margin-left: 15px; font-size: 14px;">
                             <a href="{% url 'kitchen:dish-type-update' pk=dish_type.id %}">Edit</a> |
                             <a href="{% url 'kitchen:dish-type-delete' pk=dish_type.id %}" style="color: red;">Delete</a>
@@ -33,4 +33,7 @@
     {% else %}
         <p>No categories found matching your criteria.</p>
     {% endif %}
+
+    {% include "includes/pagination.html" %}
 {% endblock %}
+ 

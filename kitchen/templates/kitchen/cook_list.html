@@ -3,7 +3,9 @@
 {% block content %}
     <h1>
         Our Cooks
-        <a href="{% url 'kitchen:cook-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Register New Cook]</a>
+        {% if user.is_authenticated and user.is_chef %}
+            <a href="{% url 'kitchen:cook-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Register New Cook]</a>
+        {% endif %}
     </h1>
 
     <form method="get" action="">
@@ -25,14 +27,22 @@
                         — Experience: not specified
                     {% endif %}
 
-                    <span style="margin-left: 15px; font-size: 14px;">
-                        <a href="{% url 'kitchen:cook-update' pk=cook.id %}">Edit</a> |
-                        <a href="{% url 'kitchen:cook-delete' pk=cook.id %}" style="color: red;">Delete</a>
-                    </span>
+                    {% if user.is_authenticated %}
+                        <span style="margin-left: 15px; font-size: 14px;">
+                            {% if user.id == cook.id or user.is_chef %}
+                                <a href="{% url 'kitchen:cook-update' pk=cook.id %}">Edit</a>
+                            {% endif %}
+                            {% if user.is_chef %}
+                                | <a href="{% url 'kitchen:cook-delete' pk=cook.id %}" style="color: red;">Delete</a>
+                            {% endif %}
+                        </span>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>
     {% else %}
         <p>No cooks found matching your criteria.</p>
     {% endif %}
+
+    {% include "includes/pagination.html" %}
 {% endblock %}

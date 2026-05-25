@@ -3,7 +3,7 @@
 {% block content %}
     <h1>
         Dishes Menu
-        {% if user.is_authenticated %}
+        {% if user.is_authenticated and user.can_manage_dishes %}
             <a href="{% url 'kitchen:dish-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
         {% endif %}
     </h1>
@@ -24,7 +24,7 @@
                     ({{ dish_list_item.dish_type.name }}) —
                     ${{ dish_list_item.price }}
 
-                    {% if user.is_authenticated %}
+                    {% if user.is_authenticated and user.can_manage_dishes %}
                         <span style="margin-left: 15px; font-size: 14px;">
                             <a href="{% url 'kitchen:dish-update' pk=dish_list_item.id %}">Edit</a> |
                             <a href="{% url 'kitchen:dish-delete' pk=dish_list_item.id %}" style="color: red;">Delete</a>
@@ -36,4 +36,6 @@
     {% else %}
         <p>No dishes found matching your criteria.</p>
     {% endif %}
+
+    {% include "includes/pagination.html" %}
 {% endblock %}
