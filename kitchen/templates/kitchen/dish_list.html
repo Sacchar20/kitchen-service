@@ -3,7 +3,9 @@
 {% block content %}
     <h1>
         Dishes Menu
-        <a href="{% url 'kitchen:dish-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
+        {% if user.is_authenticated %}
+            <a href="{% url 'kitchen:dish-create' %}" style="font-size: 16px; margin-left: 20px;">[+ Create New]</a>
+        {% endif %}
     </h1>
 
     <form method="get" action="">
@@ -22,10 +24,12 @@
                     ({{ dish_list_item.dish_type.name }}) —
                     ${{ dish_list_item.price }}
 
-                    <span style="margin-left: 15px; font-size: 14px;">
-                        <a href="{% url 'kitchen:dish-update' pk=dish_list_item.id %}">Edit</a> |
-                        <a href="{% url 'kitchen:dish-delete' pk=dish_list_item.id %}" style="color: red;">Delete</a>
-                    </span>
+                    {% if user.is_authenticated %}
+                        <span style="margin-left: 15px; font-size: 14px;">
+                            <a href="{% url 'kitchen:dish-update' pk=dish_list_item.id %}">Edit</a> |
+                            <a href="{% url 'kitchen:dish-delete' pk=dish_list_item.id %}" style="color: red;">Delete</a>
+                        </span>
+                    {% endif %}
                 </li>
             {% endfor %}
         </ul>

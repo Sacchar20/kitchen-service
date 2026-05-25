@@ -2,23 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Kitchen Service{% endblock %}</title>
+    <title>Kitchen Service</title>
 </head>
 <body>
+    <header>
+        <nav>
+            <a href="{% url 'kitchen:index' %}">Home</a> |
+            <a href="{% url 'kitchen:dish-type-list' %}">Dish Types</a> |
+            <a href="{% url 'kitchen:dish-list' %}">Dishes</a> |
+            <a href="{% url 'kitchen:cook-list' %}">Cooks</a>
 
-    <nav>
-        <a href="{% url 'kitchen:index' %}">Home</a> |
-        <a href="{% url 'kitchen:dish-type-list' %}">Dish Types</a> |
-        <a href="{% url 'kitchen:dish-list' %}">Dishes</a> |
-        <a href="{% url 'kitchen:cook-list' %}">Cooks</a>
-    </nav>
+            <span style="float: right;">
+                {% if user.is_authenticated %}
+                    Hello, <strong>{{ user.username }}</strong>!
+                    <form method="post" action="{% url 'logout' %}" style="display: inline; margin-left: 10px;">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    You are viewing as a Guest.
+                    <a href="{% url 'login' %}" style="margin-left: 10px;">Login</a>
+                {% endif %}
+            </span>
+        </nav>
+    </header>
     <hr>
 
     <main>
         {% block content %}
         {% endblock %}
     </main>
-
 </body>
 </html>
