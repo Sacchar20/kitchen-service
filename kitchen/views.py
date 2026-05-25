@@ -32,3 +32,10 @@ class DishListView(generic.ListView):
 
     def get_queryset(self):
         return Dish.objects.select_related("dish_type")
+
+
+class CookListView(generic.ListView):
+    model = Cook
+    template_name = "kitchen/cook_list.html"
+    context_object_name = "cook_list"
+    paginate_by = 5

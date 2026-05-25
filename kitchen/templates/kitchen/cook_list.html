@@ -1,0 +1,22 @@
+{% extends "kitchen/base.html" %}
+
+{% block content %}
+    <h1>Our Cooks</h1>
+
+    {% if cook_list %}
+        <ul>
+            {% for cook in cook_list %}
+                <li>
+                    <strong>{{ cook.username }}</strong> 
+                    {% if cook.years_of_experience %}
+                        — Experience: {{ cook.years_of_experience }} years
+                    {% else %}
+                        — Experience: not specified
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>There are no cooks registered yet.</p>
+    {% endif %}
+{% endblock %}
