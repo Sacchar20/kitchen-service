@@ -3,6 +3,12 @@
 {% block content %}
     <h1>Dishes Menu</h1>
 
+    <form method="get" action="">
+        {{ search_form }}
+        <input type="submit" value="Search">
+    </form>
+    <br>
+
     {% if dish_list %}
         <ul>
             {% for dish_list_item in dish_list %}
@@ -16,6 +22,6 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>Our menu is currently empty.</p>
+        <p>No dishes found matching your criteria.</p>
     {% endif %}
 {% endblock %}

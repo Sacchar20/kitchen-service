@@ -3,6 +3,12 @@
 {% block content %}
     <h1>Our Cooks</h1>
 
+    <form method="get" action="">
+        {{ search_form }}
+        <input type="submit" value="Search">
+    </form>
+    <br>
+
     {% if cook_list %}
         <ul>
             {% for cook in cook_list %}
@@ -19,6 +25,6 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>There are no cooks registered yet.</p>
+        <p>No cooks found matching your criteria.</p>
     {% endif %}
 {% endblock %}

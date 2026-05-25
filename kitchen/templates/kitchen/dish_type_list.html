@@ -3,6 +3,12 @@
 {% block content %}
     <h1>Dish Types</h1>
 
+    <form method="get" action="">
+        {{ search_form }}
+        <input type="submit" value="Search">
+    </form>
+    <br>
+
     {% if dish_type_list %}
         <ul>
             {% for dish_type in dish_type_list %}
@@ -14,6 +20,6 @@
             {% endfor %}
         </ul>
     {% else %}
-        <p>There are no dish types in the kitchen.</p>
+        <p>No categories found matching your criteria.</p>
     {% endif %}
 {% endblock %}
