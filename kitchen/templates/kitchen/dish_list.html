@@ -7,8 +7,10 @@
         <ul>
             {% for dish_list_item in dish_list %}
                 <li>
-                    <strong>{{ dish_list_item.name }}</strong> 
-                    ({{ dish_list_item.dish_type.name }}) — 
+                    <a href="{% url 'kitchen:dish-detail' pk=dish_list_item.id %}">
+                        <strong>{{ dish_list_item.name }}</strong>
+                    </a>
+                    ({{ dish_list_item.dish_type.name }}) —
                     ${{ dish_list_item.price }}
                 </li>
             {% endfor %}

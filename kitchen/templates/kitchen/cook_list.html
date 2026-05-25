@@ -7,7 +7,9 @@
         <ul>
             {% for cook in cook_list %}
                 <li>
-                    <strong>{{ cook.username }}</strong> 
+                    <a href="{% url 'kitchen:cook-detail' pk=cook.id %}">
+                        <strong>{{ cook.username }}</strong>
+                    </a>
                     {% if cook.years_of_experience %}
                         — Experience: {{ cook.years_of_experience }} years
                     {% else %}
