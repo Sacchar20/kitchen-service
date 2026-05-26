@@ -92,10 +92,16 @@ class PrivateKitchenTests(TestCase):
         self.assertTrue(response.context["is_paginated"])
         self.assertEqual(len(response.context["dish_list"]), 5)
 
-    def test_cook_cannot_create_dish_type(self):
+    def test_cook_cannot_create_dish_type_get(self):
         create_url = reverse("kitchen:dish-type-create")
         response = self.client.get(create_url)
         self.assertEqual(response.status_code, 403)
+
+    def test_cook_cannot_create_dish_type_post(self):
+        create_url = reverse("kitchen:dish-type-create")
+        response = self.client.get(create_url, data={"name": "New Type"})
+        self.assertEqual(response.status_code, 403)
+        self.assertEqual(DishType.objects.filter(name="New Type").count(), 0)
 
 
 class CookModelValidationTests(TestCase):
@@ -139,3 +145,11 @@ class CookModelValidationTests(TestCase):
             sub_chef.clean()
         except ValidationError:
             self.fail("ValidationError raised unexpectedly!")
+
+    def test_experience_cannot_be_negative(self):
+        cook = get_user_model()(
+            username="negative_cook",
+            years_of_experience=-1
+        )
+        with self.assertRaises(ValidationError):
+            cook.full_clean()
