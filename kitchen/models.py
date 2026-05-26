@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.core.validators import MinValueValidator
 from django.db import models
 
 
@@ -14,7 +15,9 @@ class DishType(models.Model):
 
 
 class Cook(AbstractUser):
-    years_of_experience = models.IntegerField()
+    years_of_experience = models.IntegerField(
+        validators=[MinValueValidator(0, message="Years of experience cannot be negative.")]
+    )
     is_sub_chef = models.BooleanField(default=False)
 
     class Meta:
@@ -27,17 +30,31 @@ class Cook(AbstractUser):
     def clean(self):
         super().clean()
 
-        if self.is_staff or self.is_superuser:
-            if self.years_of_experience is None or self.years_of_experience < 10:
+        if self.years_of_experience is not None:
+            if (self.is_staff or self.is_superuser) and self.years_of_experience < 10:
                 raise ValidationError({
                     "years_of_experience": "Chef must have at least 10 years of experience."
                 })
 
-        if self.is_sub_chef:
-            if self.years_of_experience is None or self.years_of_experience < 5:
+            if self.is_sub_chef and self.years_of_experience < 5:
                 raise ValidationError({
                     "years_of_experience": "Sub-chef must have at least 5 years of experience."
                 })
+        else:
+            if self.is_staff or self.is_superuser or self.is_sub_chef:
+                raise ValidationError({
+                    "years_of_experience": "Years of experience is required for this role."
+                })
+
+    @property
+    def role_name(self):
+        if self.is_staff or self.is_superuser:
+            return "Chef"
+        if self.is_sub_chef:
+            return "Sous Chef"
+        if self.years_of_experience is not None and self.years_of_experience >= 5:
+            return "Senior Cook"
+        return "Junior Cook"
 
     @property
     def is_chef(self):

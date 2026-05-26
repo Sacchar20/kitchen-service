@@ -1,23 +1,85 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Category: {{ dish_type.name }}</h1>
+<div class="flex-grow-1 position-relative" style="background-color: #e4e8f0 !important; min-height: 100vh; margin-top: -1rem; padding-top: 2rem; padding-bottom: 3rem;">
 
-    <h3>Dishes in this category:</h3>
-    {% if dish_type.dishes.all %}
-        <ul>
-            {% for dish in dish_type.dishes.all %}
-                <li>
-                    <a href="{% url 'kitchen:dish-detail' pk=dish.id %}">
-                        {{ dish.name }}
-                    </a> 
-                    — ${{ dish.price }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No dishes in this category yet.</p>
-    {% endif %}
+    <div class="page-header min-height-250 border-radius-xl mt-4 mx-4 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, #594a42 0%, #3a312c 100%) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;">
 
-    <p><a href="{% url 'kitchen:dish-type-list' %}">Back to list</a></p>
+        <div class="position-absolute w-100 bottom-0 start-0 z-index-1" style="pointer-events: none; margin-bottom: -1px;">
+            <svg class="w-100" style="height: 85px; display: block;" viewBox="0 24 150 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" fill="#fb923c" opacity="0.15" />
+                <path d="M-160 44c40 0 70 -12 100 -12s 60 12 100 12 70 -12 100 -12 v44h-400z" fill="#fb923c" opacity="0.1" />
+            </svg>
+        </div>
+
+        <div class="container-fluid position-relative z-index-2 pt-5 pb-4">
+            <div class="row align-items-center py-3 px-3">
+                <div class="col-sm-8">
+                    <h3 class="text-white font-weight-bolder mb-1">Category: {{ dish_type.name }}</h3>
+                    <p class="text-white opacity-8 text-sm mb-0">Browse all culinary masterpieces assigned to this category.</p>
+                </div>
+                <div class="col-sm-4 text-sm-end mt-3 mt-sm-0 position-relative z-index-3">
+                    <a href="{% url 'kitchen:dish-type-list' %}" class="btn bg-white text-dark btn-round mb-0 font-weight-bold shadow-sm">
+                        <i class="fas fa-arrow-left me-2 text-xs"></i> Back to Categories
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid py-4 px-4 position-relative z-index-2">
+        <div class="row justify-content-center">
+            <div class="col-12">
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem; background-color: #ffffff !important;">
+                    <div class="card-header pb-0 bg-transparent border-0 pt-4 px-4">
+                        <h5 class="font-weight-bolder text-dark mb-0">Dishes in this Category</h5>
+                        <p class="text-xs text-secondary mb-0">Click on any dish to view its recipe, ingredients, and assigned team</p>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if dish_type.dishes.all %}
+                            <div class="row g-3">
+                                {% for dish in dish_type.dishes.all %}
+                                    <div class="col-xl-4 col-md-6 col-100">
+                                        <div class="p-3 border border-radius-lg d-flex align-items-center justify-content-between style-dish-item" style="border-color: #f0f2f5 !important; background-color: #f8f9fa; border-radius: 0.75rem; transition: all 0.2s ease;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="icon icon-shape icon-sm bg-white shadow-sm text-center border-radius-md d-flex align-items-center justify-content-center me-3" style="width: 2.5rem; height: 2.5rem; color: #3a312c; border: 1px solid #e4e8f0;">
+                                                    <i class="fas fa-hamburger text-sm text-secondary"></i>
+                                                </div>
+                                                <a href="{% url 'kitchen:dish-detail' pk=dish.id %}" class="text-decoration-none">
+                                                    <h6 class="text-sm font-weight-bold text-dark mb-0 text-hover-primary">{{ dish.name }}</h6>
+                                                    <p class="text-xs font-weight-bolder text-dark mb-0 mt-1">${{ dish.price }}</p>
+                                                </a>
+                                            </div>
+                                            <a href="{% url 'kitchen:dish-detail' pk=dish.id %}" class="btn btn-link text-secondary p-0 mb-0">
+                                                <i class="fas fa-chevron-right text-xs"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-pizza-slice text-secondary text-lg mb-2 opacity-5"></i>
+                                <p class="text-sm text-secondary font-weight-bold mb-0">No dishes in this category yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .text-hover-primary:hover {
+        color: #594a42 !important;
+    }
+    .style-dish-item:hover {
+        background-color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transform: translateY(-2px);
+        border-color: #d2d6da !important;
+    }
+</style>
 {% endblock %}

@@ -1,13 +1,85 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>{% if object %}Update Profile{% else %}Register New Cook{% endif %}</h1>
+<div class="flex-grow-1 position-relative" style="background-color: #e4e8f0 !important; min-height: 100vh; margin-top: -1rem; padding-top: 4rem; padding-bottom: 4rem;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-8 col-sm-10">
+                <div class="card shadow-sm border-0 p-4" style="border-radius: 1rem; background-color: #ffffff !important;">
 
-    <form method="post" action="">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <input type="submit" value="Save">
-    </form>
-    
-    <p><a href="{% url 'kitchen:cook-list' %}">Cancel</a></p>
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto mb-3" style="width: 4.5rem; height: 4.5rem; background: linear-gradient(135deg, #594a42 0%, #3a312c 100%); color: #ffffff;">
+                            <i class="fas fa-user-plus fa-lg"></i>
+                        </div>
+                        <h4 class="font-weight-bolder text-dark mb-1">
+                            {% if object %}Update Profile{% else %}Register New Cook{% endif %}
+                        </h4>
+                        <p class="text-xs text-secondary mb-0">Please fill in the fields below to manage team accounts</p>
+                    </div>
+
+                    <form method="post" action="" class="style-universal-form">
+                        {% csrf_token %}
+
+                        <div class="form-fields-wrapper mb-4">
+                            {{ form.as_p }}
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn bg-gradient-dark btn-round mb-2">Save Changes</button>
+                            <a href="{% url 'kitchen:cook-list' %}" class="btn btn-outline-secondary btn-round mb-0">Cancel</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .style-universal-form p {
+        margin-bottom: 1.2rem;
+    }
+    .style-universal-form label {
+        display: block;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #495057;
+        margin-bottom: 0.4rem;
+        letter-spacing: 0.05em;
+    }
+    .style-universal-form input,
+    .style-universal-form select,
+    .style-universal-form textarea {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        color: #495057;
+        background-color: #f8f9fa;
+        background-clip: padding-box;
+        border: 1px solid #d2d6da;
+        border-radius: 0.5rem;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .style-universal-form input[type="checkbox"] {
+        width: auto;
+        margin-right: 0.5rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .style-universal-form input:focus,
+    .style-universal-form select:focus,
+    .style-universal-form textarea:focus {
+        outline: none;
+        border-color: #d2d6da;
+        box-shadow: 0 0 0 2px #e4e8f0;
+    }
+    .style-universal-form .helptext {
+        display: block;
+        font-size: 0.75rem;
+        color: #6c757d;
+        margin-top: 0.25rem;
+    }
+</style>
 {% endblock %}

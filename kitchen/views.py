@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.db.models import Case, Value, When, IntegerField
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
@@ -15,6 +16,7 @@ from .forms import (
     DishForm,
 )
 
+
 def index(request):
     num_cooks = Cook.objects.count()
     num_dishes = Dish.objects.count()
@@ -25,6 +27,7 @@ def index(request):
         "num_dish_types": num_dish_types,
     }
     return render(request, "kitchen/index.html", context=context)
+
 
 class DishTypeListView(generic.ListView):
     model = DishType
@@ -45,6 +48,7 @@ class DishTypeListView(generic.ListView):
             return queryset.filter(name__icontains=form.cleaned_data["name"])
         return queryset
 
+
 class DishListView(generic.ListView):
     model = Dish
     template_name = "kitchen/dish_list.html"
@@ -64,6 +68,7 @@ class DishListView(generic.ListView):
             return queryset.filter(name__icontains=form.cleaned_data["name"])
         return queryset
 
+
 class CookListView(generic.ListView):
     model = Cook
     template_name = "kitchen/cook_list.html"
@@ -79,9 +84,21 @@ class CookListView(generic.ListView):
     def get_queryset(self):
         queryset = Cook.objects.all()
         form = CookSearchForm(self.request.GET)
-        if form.is_valid():
-            return queryset.filter(username__icontains=form.cleaned_data["username"])
+        if form.is_valid() and form.cleaned_data.get("username"):
+            queryset = queryset.filter(username__icontains=form.cleaned_data["username"])
+
+        queryset = queryset.annotate(
+            role_priority=Case(
+                When(is_superuser=True, then=Value(1)),
+                When(is_staff=True, then=Value(1)),
+                When(is_sub_chef=True, then=Value(2)),
+                When(years_of_experience__gte=5, then=Value(3)),
+                default=Value(4),
+                output_field=IntegerField(),
+            )
+        ).order_by("role_priority", "-years_of_experience", "username")
         return queryset
+
 
 class DishDetailView(LoginRequiredMixin, generic.DetailView):
     model = Dish
@@ -112,11 +129,13 @@ class DishDetailView(LoginRequiredMixin, generic.DetailView):
         context["assign_form"] = form
         return self.render_to_response(context)
 
+
 class CookDetailView(generic.DetailView):
     model = Cook
 
     def get_queryset(self):
         return Cook.objects.prefetch_related("dishes")
+
 
 class DishTypeDetailView(generic.DetailView):
     model = DishType
@@ -125,6 +144,7 @@ class DishTypeDetailView(generic.DetailView):
 
     def get_queryset(self):
         return DishType.objects.prefetch_related("dishes")
+
 
 class DishTypeCreateView(UserPassesTestMixin, generic.CreateView):
     model = DishType
@@ -136,6 +156,7 @@ class DishTypeCreateView(UserPassesTestMixin, generic.CreateView):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_types", False)
 
+
 class DishTypeUpdateView(UserPassesTestMixin, generic.UpdateView):
     model = DishType
     fields = "__all__"
@@ -146,6 +167,7 @@ class DishTypeUpdateView(UserPassesTestMixin, generic.UpdateView):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_types", False)
 
+
 class DishTypeDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = DishType
     template_name = "kitchen/dish_type_confirm_delete.html"
@@ -154,6 +176,7 @@ class DishTypeDeleteView(UserPassesTestMixin, generic.DeleteView):
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_types", False)
+
 
 class DishCreateView(UserPassesTestMixin, generic.CreateView):
     model = Dish
@@ -165,6 +188,7 @@ class DishCreateView(UserPassesTestMixin, generic.CreateView):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_dishes", False)
 
+
 class DishUpdateView(UserPassesTestMixin, generic.UpdateView):
     model = Dish
     form_class = DishForm
@@ -175,6 +199,7 @@ class DishUpdateView(UserPassesTestMixin, generic.UpdateView):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_dishes", False)
 
+
 class DishDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = Dish
     template_name = "kitchen/dish_confirm_delete.html"
@@ -184,17 +209,20 @@ class DishDeleteView(UserPassesTestMixin, generic.DeleteView):
         user = self.request.user
         return user.is_authenticated and getattr(user, "can_manage_dishes", False)
 
+
 class CookCreateView(LoginRequiredMixin, generic.CreateView):
     model = Cook
     form_class = CookCreationForm
     template_name = "kitchen/cook_form.html"
     success_url = reverse_lazy("kitchen:cook-list")
 
+
 class CookUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Cook
     form_class = CookExperienceUpdateForm
     template_name = "kitchen/cook_form.html"
     success_url = reverse_lazy("kitchen:cook-list")
+
 
 class CookDeleteView(UserPassesTestMixin, generic.DeleteView):
     model = Cook
@@ -204,6 +232,7 @@ class CookDeleteView(UserPassesTestMixin, generic.DeleteView):
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and getattr(user, "is_chef", False)
+
 
 @login_required
 def toggle_assign_to_dish(request, pk):

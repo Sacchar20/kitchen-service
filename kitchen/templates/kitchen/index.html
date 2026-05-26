@@ -1,24 +1,112 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Kitchen Service Home</h1>
-    <p>Welcome to our restaurant management system!</p>
+<header class="header-2">
+    <div class="page-header min-vh-75 relative" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1920&auto=format&fit=crop'); background-size: cover; background-position: center; border-radius: 0 0 1.5rem 1.5rem;">
+        <span class="mask bg-gradient-dark opacity-6"></span>
 
-    <ul>
-        <li>
-            <a href="{% url 'kitchen:cook-list' %}">
-                <strong>Cooks:</strong> {{ num_cooks }}
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'kitchen:dish-list' %}">
-                <strong>Dishes:</strong> {{ num_dishes }}
-            </a>
-        </li>
-        <li>
-            <a href="{% url 'kitchen:dish-type-list' %}">
-                <strong>Dish Types:</strong> {{ num_dish_types }}
-            </a>
-        </li>
-    </ul>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7 text-center mx-auto position-relative z-index-2">
+                    <h1 class="text-white pt-5 mt-5 font-weight-bolder">Gourmet Kitchen Service</h1>
+                    <p class="lead text-white mt-3 opacity-9">
+                        Manage your premium restaurant operations, orchestrate world-class chefs, and curate exquisite menus in one seamless workspace.
+                    </p>
+                    <div class="mt-4">
+                        <a href="#dashboard-stats" class="btn bg-gradient-primary btn-round text-white px-4">
+                            Explore Dashboard <i class="fas fa-arrow-down ms-2 text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="position-absolute w-100 z-index-1 bottom-0">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="moving-waves">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(248,249,250,0.7)" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(248,249,250,0.5)" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(248,249,250,0.3)" />
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="#f8f9fa" />
+                </g>
+            </svg>
+        </div>
+    </div>
+</header>
+
+<div class="container mt-n5 pb-5 position-relative z-index-3" id="dashboard-stats">
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card move-on-hover overflow-hidden shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-8">
+                            <p class="text-xs mb-1 text-uppercase font-weight-bold text-secondary">Team</p>
+                            <h3 class="font-weight-bolder mb-0 text-dark">{{ num_cooks }}</h3>
+                            <h5 class="mt-2 font-weight-bold text-sm text-dark">Professional Cooks</h5>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md d-flex align-items-center justify-content-center" style="width: 3rem; height: 3rem; margin-left: auto;">
+                                <i class="fas fa-users text-white text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="horizontal dark my-3">
+                    <a href="{% url 'kitchen:cook-list' %}" class="text-primary text-sm icon-move-right d-flex align-items-center font-weight-bold">
+                        View our staff <i class="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card move-on-hover overflow-hidden shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-8">
+                            <p class="text-xs mb-1 text-uppercase font-weight-bold text-secondary">Recipes</p>
+                            <h3 class="font-weight-bolder mb-0 text-dark">{{ num_dishes }}</h3>
+                            <h5 class="mt-2 font-weight-bold text-sm text-dark">Active Dishes</h5>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md d-flex align-items-center justify-content-center" style="width: 3rem; height: 3rem; margin-left: auto;">
+                                <i class="fas fa-utensils text-white text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="horizontal dark my-3">
+                    <a href="{% url 'kitchen:dish-list' %}" class="text-success text-sm icon-move-right d-flex align-items-center font-weight-bold">
+                        Open full menu <i class="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4 mx-auto">
+            <div class="card move-on-hover overflow-hidden shadow-lg border-0" style="border-radius: 1rem;">
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-8">
+                            <p class="text-xs mb-1 text-uppercase font-weight-bold text-secondary">Structure</p>
+                            <h3 class="font-weight-bolder mb-0 text-dark">{{ num_dish_types }}</h3>
+                            <h5 class="mt-2 font-weight-bold text-sm text-dark">Dish Categories</h5>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md d-flex align-items-center justify-content-center" style="width: 3rem; height: 3rem; margin-left: auto;">
+                                <i class="fas fa-th-list text-white text-lg"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="horizontal dark my-3">
+                    <a href="{% url 'kitchen:dish-type-list' %}" class="text-info text-sm icon-move-right d-flex align-items-center font-weight-bold">
+                        Manage categories <i class="fas fa-arrow-right text-xs ms-1" aria-hidden="true"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

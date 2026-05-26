@@ -1,14 +1,40 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>Delete Cook Account</h1>
-    
-    <p>Are you sure you want to delete the cook account: <strong>{{ cook.username }}</strong>?</p>
+<div class="flex-grow-1 position-relative" style="background-color: #e4e8f0 !important; min-height: 100vh; margin-top: -1rem; padding-top: 5rem; padding-bottom: 5rem;">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7 col-sm-9">
+                <div class="card shadow-lg border-0 p-4" style="border-radius: 1rem; background-color: #ffffff !important;">
 
-    <form method="post" action="">
-        {% csrf_token %}
-        <input type="submit" value="Yes, delete">
-    </form>
-    
-    <p><a href="{% url 'kitchen:cook-list' %}">Cancel</a></p>
+                    <div class="text-center mb-4">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm mx-auto mb-3" style="width: 4.5rem; height: 4.5rem; background: linear-gradient(135deg, #ea4335 0%, #c5221f 100%); color: #ffffff;">
+                            <i class="fas fa-user-times fa-lg"></i>
+                        </div>
+                        <h4 class="font-weight-bolder text-dark mb-1">Delete Cook Account</h4>
+                        <p class="text-xs text-secondary mb-0">This action is permanent and cannot be undone</p>
+                    </div>
+
+                    <div class="alert bg-gray-100 text-center border-radius-md py-3 px-3 mb-4" style="border: 1px solid #f0f2f5;">
+                        <p class="text-sm text-dark mb-0">
+                            Are you sure you want to completely remove the cook account:
+                            <strong class="text-danger d-block text-base mt-1">{{ cook.username }}</strong>
+                        </p>
+                    </div>
+
+                    <form method="post" action="">
+                        {% csrf_token %}
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn bg-gradient-danger btn-round mb-2">
+                                <i class="far fa-trash-alt me-2 text-xs"></i> Yes, delete account
+                            </button>
+                            <a href="{% url 'kitchen:cook-list' %}" class="btn btn-outline-secondary btn-round mb-0">Cancel</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

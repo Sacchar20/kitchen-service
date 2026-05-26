@@ -1,66 +1,192 @@
 {% extends "kitchen/base.html" %}
 
 {% block content %}
-    <h1>{{ dish.name }}</h1>
-    <p><strong>Category:</strong> {{ dish.dish_type.name }}</p>
-    <p><strong>Price:</strong> ${{ dish.price }}</p>
-    <p><strong>Description:</strong> {{ dish.description }}</p>
+<div class="flex-grow-1 position-relative" style="background-color: #e4e8f0 !important; min-height: 100vh; margin-top: -1rem; padding-top: 2rem; padding-bottom: 3rem;">
 
-    <p><strong>Ingredients:</strong></p>
-    <ul>
-        {% for ingredient in dish.ingredients.all %}
-            <li>{{ ingredient.name }}</li>
-        {% empty %}
-            <li>No ingredients listed.</li>
-        {% endfor %}
-    </ul>
+    <div class="page-header min-height-250 border-radius-xl mt-4 mx-4 position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, #594a42 0%, #3a312c 100%) !important; box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;">
 
-    {% if user.is_authenticated %}
-        <div class="mb-3">
-            <form action="{% url 'kitchen:toggle-assign' pk=dish.id %}" method="post">
-                {% csrf_token %}
-                {% if user in dish.cooks.all %}
-                    <button type="submit" class="btn btn-danger">Delete me from this dish</button>
-                {% else %}
-                    <button type="submit" class="btn btn-success">Assign me to this dish</button>
-                {% endif %}
-            </form>
+        <div class="position-absolute w-100 bottom-0 start-0 z-index-1" style="pointer-events: none; margin-bottom: -1px;">
+            <svg class="w-100" style="height: 85px; display: block;" viewBox="0 24 150 40" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" fill="#fb923c" opacity="0.15" />
+                <path d="M-160 44c40 0 70 -12 100 -12s 60 12 100 12 70 -12 100 -12 v44h-400z" fill="#fb923c" opacity="0.1" />
+            </svg>
         </div>
-    {% endif %}
 
-    <h3>Cooks who prepare this dish:</h3>
-    {% if dish.cooks.all %}
-        <ul>
-            {% for cook in dish.cooks.all %}
-                <li>{{ cook.username }} (Experience: {{ cook.years_of_experience }} years)</li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No cooks assigned to this dish yet.</p>
-    {% endif %}
-
-    {% if assign_form and assign_form.fields.cook.queryset.exists %}
-        <div class="card mt-4 mb-4">
-            <div class="card-body">
-                <h5 class="card-title">Assign a less experienced cook to this dish</h5>
-                <form method="post" class="row g-3 align-items-center">
-                    {% csrf_token %}
-                    <div class="col-auto">
-                        {{ assign_form.cook }}
-                    </div>
-                    <div class="col-auto">
-                        <button type="submit" class="btn btn-primary">Assign Cook</button>
-                    </div>
-                </form>
+        <div class="container-fluid position-relative z-index-2 pt-5 pb-4">
+            <div class="row align-items-center py-3 px-3">
+                <div class="col-sm-8">
+                    <h3 class="text-white font-weight-bolder mb-1">{{ dish.name }}</h3>
+                    <p class="text-white opacity-8 text-sm mb-0">Detailed recipe overview, pricing, and culinary management.</p>
+                </div>
+                <div class="col-sm-4 text-sm-end mt-3 mt-sm-0 position-relative z-index-3">
+                    <a href="{% url 'kitchen:dish-list' %}" class="btn bg-white text-dark btn-round mb-0 font-weight-bold shadow-sm">
+                        <i class="fas fa-arrow-left me-2 text-xs"></i> Back to Menu
+                    </a>
+                </div>
             </div>
         </div>
-    {% endif %}
-
-    <div class="mt-3">
-        {% if user.is_authenticated and user.can_manage_dishes %}
-            <a href="{% url 'kitchen:dish-update' pk=dish.id %}" class="btn btn-secondary">Update Dish</a>
-            <a href="{% url 'kitchen:dish-delete' pk=dish.id %}" class="btn btn-danger">Delete Dish</a>
-        {% endif %}
-        <a href="{% url 'kitchen:dish-list' %}" class="btn btn-link">Back to list</a>
     </div>
+
+    <div class="container-fluid py-4 px-4 position-relative z-index-2">
+        <div class="row">
+            <div class="col-lg-4 col-md-5 mb-4">
+                <div class="card shadow-sm border-0 p-4" style="border-radius: 1rem; background-color: #ffffff !important;">
+                    <div class="d-flex justify-content-center mb-3">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center shadow-sm" style="width: 5rem; height: 5rem; background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); color: #ffffff;">
+                            <i class="fas fa-hamburger fa-2x"></i>
+                        </div>
+                    </div>
+
+                    <h5 class="font-weight-bolder mb-1 text-dark text-center">{{ dish.name }}</h5>
+
+                    <div class="mb-3 text-center">
+                        <span class="badge badge-sm bg-gradient-secondary text-xxs">
+                            {{ dish.dish_type.name }}
+                        </span>
+                    </div>
+
+                    <div class="text-center mb-3">
+                        <span class="h4 font-weight-bolder text-dark">${{ dish.price }}</span>
+                    </div>
+
+                    <hr class="horizontal dark my-3" style="background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0)); height: 1px; border: 0;">
+
+                    <div class="text-start px-2">
+                        <p class="text-xs text-secondary font-weight-bold mb-1 text-uppercase tracking-wider">Description</p>
+                        <p class="text-sm text-dark mb-4">{{ dish.description|default:"No description provided." }}</p>
+
+                        <p class="text-xs text-secondary font-weight-bold mb-2 text-uppercase tracking-wider">Ingredients</p>
+                        <div class="d-flex flex-wrap gap-2">
+                            {% for ingredient in dish.ingredients.all %}
+                                <span class="badge bg-gray-100 text-dark font-weight-bold px-3 py-2 text-xs" style="border-radius: 0.5rem; border: 1px solid #e4e8f0;">
+                                    <i class="fas fa-seedling text-success me-1"></i> {{ ingredient.name }}
+                                </span>
+                            {% empty %}
+                                <span class="text-xs text-secondary font-style-italic">No ingredients listed.</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {% if user.is_authenticated and user.can_manage_dishes %}
+                        <div class="d-grid gap-2 mt-4 pt-2">
+                            <a href="{% url 'kitchen:dish-update' pk=dish.id %}" class="btn bg-gradient-dark btn-sm mb-0 btn-round shadow-sm">
+                                <i class="fas fa-pencil-alt me-2 text-xs"></i> Update Dish
+                            </a>
+                            <a href="{% url 'kitchen:dish-delete' pk=dish.id %}" class="btn btn-outline-danger btn-sm mb-0 btn-round">
+                                <i class="far fa-trash-alt me-2 text-xs"></i> Delete Dish
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-lg-8 col-md-7">
+                {% if user.is_authenticated %}
+                    <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem; background-color: #ffffff !important;">
+                        <div class="card-body p-4 d-flex align-items-center justify-content-between flex-wrap gap-3">
+                            <div>
+                                <h6 class="font-weight-bolder text-dark mb-1">Your Assignment</h6>
+                                <p class="text-xs text-secondary mb-0">Sign in or remove yourself from this specific recipe duty.</p>
+                            </div>
+                            <form action="{% url 'kitchen:toggle-assign' pk=dish.id %}" method="post" class="mb-0">
+                                {% csrf_token %}
+                                {% if user in dish.cooks.all %}
+                                    <button type="submit" class="btn bg-gradient-danger mb-0 btn-round shadow-sm btn-sm">
+                                        <i class="fas fa-user-minus me-2 text-xs"></i> Leave This Dish
+                                    </button>
+                                {% else %}
+                                    <button type="submit" class="btn bg-gradient-success mb-0 btn-round shadow-sm btn-sm">
+                                        <i class="fas fa-user-plus me-2 text-xs"></i> Claim This Dish
+                                    </button>
+                                {% endif %}
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="card shadow-sm border-0 mb-4" style="border-radius: 1rem; background-color: #ffffff !important;">
+                    <div class="card-header pb-0 bg-transparent border-0 pt-4 px-4">
+                        <h5 class="font-weight-bolder text-dark mb-0">Assigned Culinary Team</h5>
+                        <p class="text-xs text-secondary mb-0">Cooks currently responsible for preparing this masterpiece</p>
+                    </div>
+                    <div class="card-body p-4">
+                        {% if dish.cooks.all %}
+                            <div class="row g-3">
+                                {% for cook in dish.cooks.all %}
+                                    <div class="col-xl-6 col-100">
+                                        <div class="p-3 border border-radius-lg d-flex align-items-center style-cook-item" style="border-color: #f0f2f5 !important; background-color: #f8f9fa; border-radius: 0.75rem; transition: all 0.2s ease;">
+                                            <div class="rounded-circle d-flex align-items-center justify-content-center me-3 shadow-sm" style="width: 2.5rem; height: 2.5rem; background: linear-gradient(135deg, #bdc3c7 0%, #2c3e50 100%); color: #ffffff;">
+                                                <i class="fas fa-user text-sm"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="text-sm font-weight-bold text-dark mb-0">{{ cook.username }}</h6>
+                                                <p class="text-xxs text-secondary mb-0"><i class="fas fa-star text-warning me-1"></i> {{ cook.years_of_experience }} years exp.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="text-center py-5">
+                                <i class="fas fa-users-slash text-secondary text-lg mb-2 opacity-5"></i>
+                                <p class="text-sm text-secondary font-weight-bold mb-0">No cooks assigned to this dish yet.</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if assign_form and assign_form.fields.cook.queryset.exists %}
+                    <div class="card shadow-sm border-0" style="border-radius: 1rem; background-color: #ffffff !important;">
+                        <div class="card-body p-4">
+                            <h6 class="font-weight-bolder text-dark mb-1">Delegate Duty</h6>
+                            <p class="text-xs text-secondary mb-3">Assign another team member to manage and prepare this recipe.</p>
+                            <form method="post" class="row g-3 align-items-center">
+                                {% csrf_token %}
+                                <div class="col-md-8 style-django-form custom-select-wrapper">
+                                    {{ assign_form.cook }}
+                                </div>
+                                <div class="col-md-4 d-grid">
+                                    <button type="submit" class="btn bg-gradient-dark mb-0 btn-round btn-sm">Assign Cook</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .style-cook-item:hover {
+        background-color: #ffffff !important;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        transform: translateY(-2px);
+        border-color: #d2d6da !important;
+    }
+
+    .style-django-form select {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+        color: #495057;
+        background-color: #f8f9fa;
+        background-clip: padding-box;
+        border: 1px solid #d2d6da;
+        border-radius: 0.5rem;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
+    }
+    .style-django-form select:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px #e4e8f0;
+        border-color: #d2d6da;
+    }
+    .style-django-form label {
+        display: none;
+    }
+    .tracking-wider {
+        letter-spacing: 0.05em;
+    }
+</style>
 {% endblock %}
