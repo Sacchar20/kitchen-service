@@ -12,22 +12,25 @@ Python3 must be already installed.
 
 Repository URL: [https://github.com/Sacchar20/kitchen-service](https://github.com/Sacchar20/kitchen-service)
 
-```shell
-git clone https://github.com/Sacchar20/kitchen-service.git
-cd kitchen-service
-python3 -m venv .venv
-source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-pip install -r requirements.txt
-python manage.py runserver
+Run the following commands in your terminal:
+1. git clone https://github.com/Sacchar20/kitchen-service.git
+2. cd kitchen-service
+3. python3 -m venv .venv
+4. source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
+5. pip install -r requirements.txt
+6. python manage.py runserver
 
+## Features
 
-Features
-Custom User Model — Implemented custom Cook model with authentication and years of experience validation.
+* **Custom User Model** — Implemented custom Cook model with authentication and years of experience validation.
+* **Full CRUD Operations** — Management for Dishes, Dish Types, and Cooks directly from the website interface.
+* **Access Control** — Secure views with authorization requirements preventing unauthorized actions.
+* **Clean UI** — Responsive interface built with Bootstrap 5, customized for better user experience.
+* **Admin Panel** — Powerful built-in Django admin dashboard for advanced data management.
 
-Full CRUD Operations — Management for Dishes, Dish Types, and Cooks directly from the website interface.
+## Demo Credentials
 
-Access Control — Secure views with authorization requirements preventing unauthorized actions.
+To test the application without creating a new account, you can use the following credentials:
 
-Clean UI — Responsive interface built with Bootstrap 5, customized for better user experience.
-
-Admin Panel — Powerful built-in Django admin dashboard for advanced data management.
+* **Username:** `admin`
+* **Password:** `1a2b3c4d`
