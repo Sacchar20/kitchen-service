@@ -6,32 +6,32 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('kitchen', '0003_alter_dish_description'),
+        ("kitchen", "0003_alter_dish_description"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='cook',
-            options={'verbose_name': 'cook', 'verbose_name_plural': 'cooks'},
+            name="cook",
+            options={"verbose_name": "cook", "verbose_name_plural": "cooks"},
         ),
         migrations.AlterModelOptions(
-            name='dish',
-            options={'verbose_name_plural': 'dishes'},
+            name="dish",
+            options={"verbose_name_plural": "dishes"},
         ),
         migrations.AddField(
-            model_name='cook',
-            name='is_sub_chef',
+            model_name="cook",
+            name="is_sub_chef",
             field=models.BooleanField(default=False),
         ),
         migrations.AlterField(
-            model_name='cook',
-            name='years_of_experience',
+            model_name="cook",
+            name="years_of_experience",
             field=models.IntegerField(default=5),
             preserve_default=False,
         ),
         migrations.AlterField(
-            model_name='dish',
-            name='description',
+            model_name="dish",
+            name="description",
             field=models.TextField(default=11),
             preserve_default=False,
         ),

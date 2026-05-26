@@ -86,7 +86,9 @@ class CookListView(generic.ListView):
         queryset = Cook.objects.all()
         form = CookSearchForm(self.request.GET)
         if form.is_valid() and form.cleaned_data.get("username"):
-            queryset = queryset.filter(username__icontains=form.cleaned_data["username"])
+            queryset = queryset.filter(
+                username__icontains=form.cleaned_data["username"]
+            )
 
         queryset = queryset.annotate(
             role_priority=Case(

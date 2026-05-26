@@ -7,17 +7,23 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('kitchen', '0004_alter_cook_options_alter_dish_options_and_more'),
+        ("kitchen", "0004_alter_cook_options_alter_dish_options_and_more"),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name='dish',
-            options={'ordering': ['name'], 'verbose_name_plural': 'dishes'},
+            name="dish",
+            options={"ordering": ["name"], "verbose_name_plural": "dishes"},
         ),
         migrations.AlterField(
-            model_name='cook',
-            name='years_of_experience',
-            field=models.IntegerField(validators=[django.core.validators.MinValueValidator(0, message='Years of experience cannot be negative.')]),
+            model_name="cook",
+            name="years_of_experience",
+            field=models.IntegerField(
+                validators=[
+                    django.core.validators.MinValueValidator(
+                        0, message="Years of experience cannot be negative."
+                    )
+                ]
+            ),
         ),
     ]

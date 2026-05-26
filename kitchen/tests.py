@@ -25,7 +25,7 @@ class PublicKitchenTests(TestCase):
             name="Test Cake",
             description="Yummy dessert",
             price=10.00,
-            dish_type=dish_type
+            dish_type=dish_type,
         )
         detail_url = reverse("kitchen:dish-detail", kwargs={"pk": dish.pk})
         response = self.client.get(detail_url)
@@ -37,9 +37,7 @@ class PrivateKitchenTests(TestCase):
 
     def setUp(self):
         self.user = get_user_model().objects.create_user(
-            username="test_cook",
-            password="strong_password123",
-            years_of_experience=3
+            username="test_cook", password="strong_password123", years_of_experience=3
         )
         self.client.login(username="test_cook", password="strong_password123")
         self.dish_type = DishType.objects.create(name="Pizzas")
@@ -47,7 +45,7 @@ class PrivateKitchenTests(TestCase):
             name="Margherita",
             description="Classic pizza",
             price=12.50,
-            dish_type=self.dish_type
+            dish_type=self.dish_type,
         )
 
     def test_dish_detail_accessible_with_login(self):
@@ -58,10 +56,7 @@ class PrivateKitchenTests(TestCase):
 
     def test_search_dish_by_name(self):
         Dish.objects.create(
-            name="Pepperoni",
-            description="Spicy",
-            price=15.00,
-            dish_type=self.dish_type
+            name="Pepperoni", description="Spicy", price=15.00, dish_type=self.dish_type
         )
         response = self.client.get(DISH_LIST_URL, {"name": "Margh"})
         self.assertIn(self.dish, response.context["dish_list"])
@@ -70,14 +65,18 @@ class PrivateKitchenTests(TestCase):
     def test_toggle_assign_to_dish_adds_cook(self):
         toggle_url = reverse("kitchen:toggle-assign", kwargs={"pk": self.dish.pk})
         response = self.client.get(toggle_url)
-        self.assertRedirects(response, reverse("kitchen:dish-detail", kwargs={"pk": self.dish.pk}))
+        self.assertRedirects(
+            response, reverse("kitchen:dish-detail", kwargs={"pk": self.dish.pk})
+        )
         self.assertIn(self.user, self.dish.cooks.all())
 
     def test_toggle_assign_to_dish_removes_cook(self):
         self.dish.cooks.add(self.user)
         toggle_url = reverse("kitchen:toggle-assign", kwargs={"pk": self.dish.pk})
         response = self.client.get(toggle_url)
-        self.assertRedirects(response, reverse("kitchen:dish-detail", kwargs={"pk": self.dish.pk}))
+        self.assertRedirects(
+            response, reverse("kitchen:dish-detail", kwargs={"pk": self.dish.pk})
+        )
         self.assertNotIn(self.user, self.dish.cooks.all())
 
     def test_pagination_is_five(self):
@@ -86,7 +85,7 @@ class PrivateKitchenTests(TestCase):
                 name=f"Dish {i}",
                 description="Test",
                 price=10.00,
-                dish_type=self.dish_type
+                dish_type=self.dish_type,
             )
         response = self.client.get(DISH_LIST_URL)
         self.assertTrue(response.context["is_paginated"])
@@ -108,18 +107,14 @@ class CookModelValidationTests(TestCase):
 
     def test_chef_validation_raises_error_if_low_experience(self):
         chef = get_user_model()(
-            username="bad_chef",
-            is_staff=True,
-            years_of_experience=5
+            username="bad_chef", is_staff=True, years_of_experience=5
         )
         with self.assertRaises(ValidationError):
             chef.clean()
 
     def test_chef_validation_passes_if_high_experience(self):
         chef = get_user_model()(
-            username="good_chef",
-            is_staff=True,
-            years_of_experience=12
+            username="good_chef", is_staff=True, years_of_experience=12
         )
         try:
             chef.clean()
@@ -128,18 +123,14 @@ class CookModelValidationTests(TestCase):
 
     def test_sub_chef_validation_raises_error_if_low_experience(self):
         sub_chef = get_user_model()(
-            username="bad_sub_chef",
-            is_sub_chef=True,
-            years_of_experience=2
+            username="bad_sub_chef", is_sub_chef=True, years_of_experience=2
         )
         with self.assertRaises(ValidationError):
             sub_chef.clean()
 
     def test_sub_chef_validation_passes_if_high_experience(self):
         sub_chef = get_user_model()(
-            username="good_sub_chef",
-            is_sub_chef=True,
-            years_of_experience=6
+            username="good_sub_chef", is_sub_chef=True, years_of_experience=6
         )
         try:
             sub_chef.clean()
@@ -147,9 +138,6 @@ class CookModelValidationTests(TestCase):
             self.fail("ValidationError raised unexpectedly!")
 
     def test_experience_cannot_be_negative(self):
-        cook = get_user_model()(
-            username="negative_cook",
-            years_of_experience=-1
-        )
+        cook = get_user_model()(username="negative_cook", years_of_experience=-1)
         with self.assertRaises(ValidationError):
             cook.full_clean()

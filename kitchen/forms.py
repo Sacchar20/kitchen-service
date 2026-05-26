@@ -10,7 +10,7 @@ class DishTypeSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by name..."})
+        widget=forms.TextInput(attrs={"placeholder": "Search by name..."}),
     )
 
 
@@ -19,7 +19,7 @@ class DishSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by name..."})
+        widget=forms.TextInput(attrs={"placeholder": "Search by name..."}),
     )
 
 
@@ -28,7 +28,7 @@ class CookSearchForm(forms.Form):
         max_length=255,
         required=False,
         label="",
-        widget=forms.TextInput(attrs={"placeholder": "Search by username..."})
+        widget=forms.TextInput(attrs={"placeholder": "Search by username..."}),
     )
 
 
@@ -48,9 +48,11 @@ class CookCreationForm(UserCreationForm):
         is_sub_chef = cleaned_data.get("is_sub_chef")
         if is_sub_chef:
             if years_of_experience is None or int(years_of_experience) < 5:
-                raise ValidationError({
-                    "years_of_experience": "Sub-chef must have at least 5 years of experience."
-                })
+                raise ValidationError(
+                    {
+                        "years_of_experience": "Sub-chef must have at least 5 years of experience."
+                    }
+                )
         return cleaned_data
 
 
@@ -70,7 +72,9 @@ class CookExperienceUpdateForm(forms.ModelForm):
             raise ValidationError("Experience cannot be negative.")
         if self.instance and self.instance.is_sub_chef:
             if years_of_experience is None or years_of_experience < 5:
-                raise ValidationError("Sub-chef must have at least 5 years of experience.")
+                raise ValidationError(
+                    "Sub-chef must have at least 5 years of experience."
+                )
         return years_of_experience
 
 
@@ -92,7 +96,7 @@ class AssignCookToDishForm(forms.Form):
     cook = forms.ModelChoiceField(
         queryset=Cook.objects.none(),
         label="Select a cook to assign",
-        widget=forms.Select(attrs={"class": "form-select"})
+        widget=forms.Select(attrs={"class": "form-select"}),
     )
 
     def __init__(self, *args, **kwargs):
@@ -100,10 +104,16 @@ class AssignCookToDishForm(forms.Form):
         user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         if dish and user and user.is_authenticated:
-            queryset = Cook.objects.exclude(id__in=dish.cooks.values_list("id", flat=True))
+            queryset = Cook.objects.exclude(
+                id__in=dish.cooks.values_list("id", flat=True)
+            )
             if user.is_staff or user.is_superuser:
                 self.fields["cook"].queryset = queryset
             elif user.is_sub_chef:
-                self.fields["cook"].queryset = queryset.filter(is_staff=False, is_superuser=False)
+                self.fields["cook"].queryset = queryset.filter(
+                    is_staff=False, is_superuser=False
+                )
             elif user.years_of_experience is not None and user.years_of_experience >= 5:
-                self.fields["cook"].queryset = queryset.filter(years_of_experience__lt=5)
+                self.fields["cook"].queryset = queryset.filter(
+                    years_of_experience__lt=5
+                )

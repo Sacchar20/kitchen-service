@@ -16,7 +16,9 @@ class DishType(models.Model):
 
 class Cook(AbstractUser):
     years_of_experience = models.IntegerField(
-        validators=[MinValueValidator(0, message="Years of experience cannot be negative.")]
+        validators=[
+            MinValueValidator(0, message="Years of experience cannot be negative.")
+        ]
     )
     is_sub_chef = models.BooleanField(default=False)
 
@@ -32,19 +34,25 @@ class Cook(AbstractUser):
 
         if self.years_of_experience is not None:
             if (self.is_staff or self.is_superuser) and self.years_of_experience < 10:
-                raise ValidationError({
-                    "years_of_experience": "Chef must have at least 10 years of experience."
-                })
+                raise ValidationError(
+                    {
+                        "years_of_experience": "Chef must have at least 10 years of experience."
+                    }
+                )
 
             if self.is_sub_chef and self.years_of_experience < 5:
-                raise ValidationError({
-                    "years_of_experience": "Sub-chef must have at least 5 years of experience."
-                })
+                raise ValidationError(
+                    {
+                        "years_of_experience": "Sub-chef must have at least 5 years of experience."
+                    }
+                )
         else:
             if self.is_staff or self.is_superuser or self.is_sub_chef:
-                raise ValidationError({
-                    "years_of_experience": "Years of experience is required for this role."
-                })
+                raise ValidationError(
+                    {
+                        "years_of_experience": "Years of experience is required for this role."
+                    }
+                )
 
     @property
     def role_name(self):
@@ -91,7 +99,9 @@ class Dish(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=7, decimal_places=2)
-    dish_type = models.ForeignKey(DishType, on_delete=models.CASCADE, related_name="dishes")
+    dish_type = models.ForeignKey(
+        DishType, on_delete=models.CASCADE, related_name="dishes"
+    )
     ingredients = models.ManyToManyField(Ingredient, related_name="dishes")
     cooks = models.ManyToManyField(Cook, related_name="dishes")
 

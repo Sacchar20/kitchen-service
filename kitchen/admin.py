@@ -6,7 +6,11 @@ from .models import Cook, DishType, Ingredient, Dish
 
 @admin.register(Cook)
 class CookAdmin(UserAdmin):
-    list_display = UserAdmin.list_display + ("years_of_experience", "is_sub_chef", "show_role")
+    list_display = UserAdmin.list_display + (
+        "years_of_experience",
+        "is_sub_chef",
+        "show_role",
+    )
 
     fieldsets = (
         (None, {"fields": ("username", "password")}),
@@ -16,9 +20,17 @@ class CookAdmin(UserAdmin):
     )
 
     add_fieldsets = UserAdmin.add_fieldsets + (
-        ("Additional info", {
-            "fields": ("years_of_experience", "is_sub_chef", "first_name", "last_name")
-        }),
+        (
+            "Additional info",
+            {
+                "fields": (
+                    "years_of_experience",
+                    "is_sub_chef",
+                    "first_name",
+                    "last_name",
+                )
+            },
+        ),
     )
 
     @admin.display(description="Role")
