@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
-from .models import Cook, Dish, DishType
+
 from .forms import (
     DishSearchForm,
     CookSearchForm,
@@ -15,6 +15,7 @@ from .forms import (
     AssignCookToDishForm,
     DishForm,
 )
+from .models import Cook, Dish, DishType
 
 
 def index(request):
@@ -108,7 +109,7 @@ class DishDetailView(LoginRequiredMixin, generic.DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        dish: Dish = self.get_object()
+        dish = self.get_object()
         user = self.request.user
         if user.is_authenticated and getattr(user, "can_assign_others", False):
             context["assign_form"] = AssignCookToDishForm(dish=dish, user=user)
@@ -116,7 +117,7 @@ class DishDetailView(LoginRequiredMixin, generic.DetailView):
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        dish: Dish = self.object
+        dish = self.object
         user = request.user
         if not user.is_authenticated or not getattr(user, "can_assign_others", False):
             return HttpResponseRedirect(request.path)

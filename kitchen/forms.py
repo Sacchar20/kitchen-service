@@ -1,7 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
-from .models import Cook, Dish, Ingredient
+
+from .models import Cook, Dish
+
 
 class DishTypeSearchForm(forms.Form):
     name = forms.CharField(
@@ -11,6 +13,7 @@ class DishTypeSearchForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "Search by name..."})
     )
 
+
 class DishSearchForm(forms.Form):
     name = forms.CharField(
         max_length=255,
@@ -19,6 +22,7 @@ class DishSearchForm(forms.Form):
         widget=forms.TextInput(attrs={"placeholder": "Search by name..."})
     )
 
+
 class CookSearchForm(forms.Form):
     username = forms.CharField(
         max_length=255,
@@ -26,6 +30,7 @@ class CookSearchForm(forms.Form):
         label="",
         widget=forms.TextInput(attrs={"placeholder": "Search by username..."})
     )
+
 
 class CookCreationForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
@@ -48,6 +53,7 @@ class CookCreationForm(UserCreationForm):
                 })
         return cleaned_data
 
+
 class CookExperienceUpdateForm(forms.ModelForm):
     class Meta:
         model = Cook
@@ -67,6 +73,7 @@ class CookExperienceUpdateForm(forms.ModelForm):
                 raise ValidationError("Sub-chef must have at least 5 years of experience.")
         return years_of_experience
 
+
 class DishForm(forms.ModelForm):
     class Meta:
         model = Dish
@@ -79,6 +86,7 @@ class DishForm(forms.ModelForm):
             "ingredients": forms.SelectMultiple(attrs={"class": "form-control"}),
             "cooks": forms.SelectMultiple(attrs={"class": "form-control"}),
         }
+
 
 class AssignCookToDishForm(forms.Form):
     cook = forms.ModelChoiceField(

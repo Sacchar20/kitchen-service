@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
+
 from .models import Cook, DishType, Ingredient, Dish
 
 
@@ -7,7 +8,6 @@ from .models import Cook, DishType, Ingredient, Dish
 class CookAdmin(UserAdmin):
     list_display = UserAdmin.list_display + ("years_of_experience", "is_sub_chef", "show_role")
 
-    # Здесь мы полностью управляем блоками на странице редактирования повара
     fieldsets = (
         (None, {"fields": ("username", "password")}),
         ("Personal info", {"fields": ("first_name", "last_name", "email")}),
