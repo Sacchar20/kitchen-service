@@ -1,8 +1,7 @@
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Case, Value, When, IntegerField
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
 
@@ -18,16 +17,15 @@ from .forms import (
 from .models import Cook, Dish, DishType
 
 
-def index(request):
-    num_cooks = Cook.objects.count()
-    num_dishes = Dish.objects.count()
-    num_dish_types = DishType.objects.count()
-    context = {
-        "num_cooks": num_cooks,
-        "num_dishes": num_dishes,
-        "num_dish_types": num_dish_types,
-    }
-    return render(request, "kitchen/index.html", context=context)
+class IndexView(generic.TemplateView):
+    template_name = "kitchen/index.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["num_cooks"] = Cook.objects.count()
+        context["num_dishes"] = Dish.objects.count()
+        context["num_dish_types"] = DishType.objects.count()
+        return context
 
 
 class DishTypeListView(generic.ListView):
@@ -237,12 +235,15 @@ class CookDeleteView(UserPassesTestMixin, generic.DeleteView):
         return user.is_authenticated and getattr(user, "is_chef", False)
 
 
-@login_required
-def toggle_assign_to_dish(request, pk):
-    cook = Cook.objects.get(id=request.user.id)
-    dish = get_object_or_404(Dish, id=pk)
-    if cook in dish.cooks.all():
-        dish.cooks.remove(cook)
-    else:
-        dish.cooks.add(cook)
-    return HttpResponseRedirect(reverse_lazy("kitchen:dish-detail", kwargs={"pk": pk}))
+class ToggleAssignToDishView(LoginRequiredMixin, generic.View):
+
+    def get(self, request, pk):
+        cook = get_object_or_404(Cook, id=request.user.id)
+        dish = get_object_or_404(Dish, id=pk)
+        if cook in dish.cooks.all():
+            dish.cooks.remove(cook)
+        else:
+            dish.cooks.add(cook)
+        return HttpResponseRedirect(
+            reverse_lazy("kitchen:dish-detail", kwargs={"pk": pk})
+        )

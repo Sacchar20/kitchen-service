@@ -97,7 +97,10 @@ LOGOUT_REDIRECT_URL = "/accounts/login/"
 
 
 if not DEBUG:
-    SECURE_SSL_REDIRECT = True
+    import sys
+    IS_TESTING = "test" in sys.argv
+
+    SECURE_SSL_REDIRECT = not IS_TESTING
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 31536000

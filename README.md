@@ -4,7 +4,7 @@ Django-based web application for managing a kitchen service, cooks, dishes, and 
 
 ## Check it out!
 
-[Kitchen Service project deployed to Render](https://[xxx].render.com/)
+[Kitchen Service project deployed to Render](https://твоё-название-на-render.render.com/)
 
 ## Installation
 
@@ -13,12 +13,12 @@ Python3 must be already installed.
 Repository URL: [https://github.com/Sacchar20/kitchen-service](https://github.com/Sacchar20/kitchen-service)
 
 Run the following commands in your terminal:
-1. git clone https://github.com/Sacchar20/kitchen-service.git
-2. cd kitchen-service
-3. python3 -m venv .venv
-4. source .venv/bin/activate  # On Windows use: .venv\Scripts\activate
-5. pip install -r requirements.txt
-6. python manage.py runserver
+1. `git clone https://github.com/Sacchar20/kitchen-service.git`
+2. `cd kitchen-service`
+3. `python3 -m venv .venv`
+4. `source .venv/bin/activate`  # On Windows use: `.venv\Scripts\activate`
+5. `pip install -r requirements.txt`
+6. `python manage.py runserver`
 
 ## Features
 
@@ -34,3 +34,14 @@ To test the application without creating a new account, you can use the followin
 
 * **Username:** `admin`
 * **Password:** `1a2b3c4d`
+
+## User Interface
+
+### Home Page (Dashboard)
+![Home Page](screenshots/index.jpg)
+
+### Dishes Menu (with Search & Pagination)
+![Dishes Menu](screenshots/dish_list.jpg)
+
+### Dish Types Management
+![Dish Types](screenshots/dish_type_list.jpg)
