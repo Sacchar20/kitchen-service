@@ -4,7 +4,7 @@ Django-based web application for managing a kitchen service, cooks, dishes, and 
 
 ## Check it out!
 
-[Kitchen Service project deployed to Render](https://твоё-название-на-render.render.com/)
+[Kitchen Service project deployed to Render](https://kitchen-service-ioid.onrender.com/)
 
 ## Installation
 
