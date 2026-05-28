@@ -13,7 +13,7 @@
                         Manage your premium restaurant operations, orchestrate world-class chefs, and curate exquisite menus in one seamless workspace.
                     </p>
                     <div class="mt-4">
-                        <a href="#dashboard-stats" class="btn bg-gradient-primary btn-round text-white px-4">
+                        <a href="#dashboard-stats" class="btn bg-gradient-primary btn-round text-white px-4" style="scroll-behavior: smooth;">
                             Explore Dashboard <i class="fas fa-arrow-down ms-2 text-xs"></i>
                         </a>
                     </div>
@@ -37,8 +37,8 @@
     </div>
 </header>
 
-<div id="dashboard-stats" style="position: absolute; transform: translateY(-90px);"></div>
-<div class="container mt-n5 pb-5 position-relative z-index-3">
+<div id="dashboard-stats" style="position: absolute; transform: translateY(-40px);"></div>
+<div class="container mt-n5 pb-5 position-relative z-index-3" style="margin-bottom: 250px;">
     <div class="row">
         <div class="col-lg-4 col-md-6 mb-4">
             <div class="card move-on-hover overflow-hidden shadow-lg border-0" style="border-radius: 1rem;">
@@ -110,4 +110,14 @@
         </div>
     </div>
 </div>
+
+<script>
+document.querySelector('a[href="#dashboard-stats"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.querySelector('#dashboard-stats').scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+    });
+});
+</script>
 {% endblock %}
