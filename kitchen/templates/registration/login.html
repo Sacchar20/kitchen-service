@@ -20,7 +20,6 @@
                         {{ field.label }}
                     </label>
 
-                    {# Рендерим инпут вручную и вешаем класс form-control для красоты Bootstrap #}
                     <input type="{% if field.name == 'password' %}password{% else %}text{% endif %}"
                            name="{{ field.name }}"
                            id="{{ field.id_for_label }}"
@@ -33,6 +32,13 @@
             <button type="submit" class="btn w-100 text-white fw-bold py-2 mt-3" style="background-color: #fca311; border: none; border-radius: 8px;">
                 Login
             </button>
+
+            <div class="text-center mt-3">
+                <p class="small text-secondary mb-0">Don't have an account?</p>
+                <a href="{% url 'kitchen:cook-create' %}" class="fw-bold small" style="color: #fca311; text-decoration: none;">
+                    Register as a Cook
+                </a>
+            </div>
         </form>
     </div>
 </div>

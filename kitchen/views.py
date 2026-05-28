@@ -211,11 +211,11 @@ class DishDeleteView(UserPassesTestMixin, generic.DeleteView):
         return user.is_authenticated and getattr(user, "can_manage_dishes", False)
 
 
-class CookCreateView(LoginRequiredMixin, generic.CreateView):
+class CookCreateView(generic.CreateView):
     model = Cook
     form_class = CookCreationForm
     template_name = "kitchen/cook_form.html"
-    success_url = reverse_lazy("kitchen:cook-list")
+    success_url = reverse_lazy("login")
 
 
 class CookUpdateView(LoginRequiredMixin, generic.UpdateView):
