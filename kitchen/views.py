@@ -1,3 +1,4 @@
+from django.contrib.auth import login
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.db.models import Case, Value, When, IntegerField
 from django.http import HttpResponseRedirect
@@ -111,7 +112,7 @@ class DishDetailView(LoginRequiredMixin, generic.DetailView):
         context = super().get_context_data(**kwargs)
         dish = self.get_object()
         user = self.request.user
-        if user.is_authenticated and getattr(user, "can_assign_others", False):
+        if user.is_authenticated:
             context["assign_form"] = AssignCookToDishForm(dish=dish, user=user)
         return context
 
@@ -119,7 +120,7 @@ class DishDetailView(LoginRequiredMixin, generic.DetailView):
         self.object = self.get_object()
         dish = self.object
         user = request.user
-        if not user.is_authenticated or not getattr(user, "can_assign_others", False):
+        if not user.is_authenticated:
             return HttpResponseRedirect(request.path)
         form = AssignCookToDishForm(request.POST, dish=dish, user=user)
         if form.is_valid():
@@ -154,8 +155,7 @@ class DishTypeCreateView(UserPassesTestMixin, generic.CreateView):
     success_url = reverse_lazy("kitchen:dish-type-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_types", False)
+        return self.request.user.is_authenticated
 
 
 class DishTypeUpdateView(UserPassesTestMixin, generic.UpdateView):
@@ -165,8 +165,7 @@ class DishTypeUpdateView(UserPassesTestMixin, generic.UpdateView):
     success_url = reverse_lazy("kitchen:dish-type-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_types", False)
+        return self.request.user.is_authenticated
 
 
 class DishTypeDeleteView(UserPassesTestMixin, generic.DeleteView):
@@ -175,8 +174,7 @@ class DishTypeDeleteView(UserPassesTestMixin, generic.DeleteView):
     success_url = reverse_lazy("kitchen:dish-type-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_types", False)
+        return self.request.user.is_authenticated
 
 
 class DishCreateView(UserPassesTestMixin, generic.CreateView):
@@ -186,8 +184,7 @@ class DishCreateView(UserPassesTestMixin, generic.CreateView):
     success_url = reverse_lazy("kitchen:dish-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_dishes", False)
+        return self.request.user.is_authenticated
 
 
 class DishUpdateView(UserPassesTestMixin, generic.UpdateView):
@@ -197,8 +194,7 @@ class DishUpdateView(UserPassesTestMixin, generic.UpdateView):
     success_url = reverse_lazy("kitchen:dish-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_dishes", False)
+        return self.request.user.is_authenticated
 
 
 class DishDeleteView(UserPassesTestMixin, generic.DeleteView):
@@ -207,15 +203,19 @@ class DishDeleteView(UserPassesTestMixin, generic.DeleteView):
     success_url = reverse_lazy("kitchen:dish-list")
 
     def test_func(self):
-        user = self.request.user
-        return user.is_authenticated and getattr(user, "can_manage_dishes", False)
+        return self.request.user.is_authenticated
 
 
 class CookCreateView(generic.CreateView):
     model = Cook
     form_class = CookCreationForm
     template_name = "kitchen/cook_form.html"
-    success_url = reverse_lazy("login")
+    success_url = reverse_lazy("kitchen:index")
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        login(self.request, self.object)
+        return response
 
 
 class CookUpdateView(LoginRequiredMixin, generic.UpdateView):
@@ -232,7 +232,9 @@ class CookDeleteView(UserPassesTestMixin, generic.DeleteView):
 
     def test_func(self):
         user = self.request.user
-        return user.is_authenticated and getattr(user, "is_chef", False)
+        return user.is_authenticated and (
+            user.is_superuser or getattr(user, "is_chef", False)
+        )
 
 
 class ToggleAssignToDishView(LoginRequiredMixin, generic.View):
