@@ -29,21 +29,24 @@ class IndexView(generic.TemplateView):
         return context
 
 
-class DishTypeListView(generic.ListView):
-    model = DishType
-    context_object_name = "dish_type_list"
-    template_name = "kitchen/dish_type_list.html"
+class DishListView(generic.ListView):
+    model = Dish
+    template_name = "kitchen/dish_list.html"
+    context_object_name = "dish_list"
     paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         name = self.request.GET.get("name", "")
-        context["search_form"] = DishTypeSearchForm(initial={"name": name})
+        context["search_form"] = DishSearchForm(initial={"name": name})
         return context
 
     def get_queryset(self):
-        queryset = DishType.objects.all()
-        form = DishTypeSearchForm(self.request.GET)
+        queryset = Dish.objects.select_related("dish_type").order_by(
+            "dish_type__name",
+            "name"
+        )
+        form = DishSearchForm(self.request.GET)
         if form.is_valid():
             return queryset.filter(name__icontains=form.cleaned_data["name"])
         return queryset
