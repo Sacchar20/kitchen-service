@@ -19,7 +19,7 @@
                     <h3 class="text-white font-weight-bolder mb-1">Dish Types</h3>
                     <p class="text-white opacity-8 text-sm mb-0">Manage and organize your premium restaurant menu structures and types.</p>
                 </div>
-                {% if user.is_authenticated and user.can_manage_dishes %}
+                {% if user.is_authenticated %}
                     <div class="col-sm-4 text-sm-end mt-3 mt-sm-0 position-relative z-index-3">
                         <a href="{% url 'kitchen:dish-type-create' %}" class="btn bg-white text-dark btn-round mb-0 font-weight-bold shadow-sm">
                             <i class="fas fa-plus me-2 text-xs"></i> Add Dish Type
@@ -57,7 +57,7 @@
                         <tr>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 px-4 py-3">Type Name</th>
                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center py-3">Status</th>
-                            {% if user.is_authenticated and user.can_manage_dishes %}
+                            {% if user.is_authenticated %}
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-end px-4 py-3">Actions</th>
                             {% endif %}
                         </tr>
@@ -79,7 +79,7 @@
                                     <td class="align-middle text-center text-sm">
                                         <span class="badge badge-sm bg-gradient-success">Active</span>
                                     </td>
-                                    {% if user.is_authenticated and user.can_manage_dishes %}
+                                    {% if user.is_authenticated %}
                                         <td class="align-middle text-end px-4">
                                             <a href="{% url 'kitchen:dish-type-update' pk=dish_type.id %}" class="btn btn-link text-dark px-2 mb-0 text-xs font-weight-bold">
                                                 <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i> Edit
@@ -93,7 +93,7 @@
                             {% endfor %}
                         {% else %}
                             <tr>
-                                <td colspan="{% if user.is_authenticated and user.can_manage_dishes %}3{% else %}2{% endif %}" class="text-center py-5">
+                                <td colspan="{% if user.is_authenticated %}3{% else %}2{% endif %}" class="text-center py-5">
                                     <div class="text-center">
                                         <i class="fas fa-folder-open text-secondary text-lg mb-2 opacity-5"></i>
                                         <p class="text-sm text-secondary mb-0">No dish types found matching your criteria.</p>
